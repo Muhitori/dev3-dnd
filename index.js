@@ -1,39 +1,38 @@
-(() => {
-    const mainDiv = document.querySelector('.main_div');
+function start() {
+    const mainDiv = document.getElementsByClassName('main_div')[0];
     const input = document.getElementById('main_input');
+    const mainButton = document.getElementById("main_button");
     let coordsArr = [];
 
-    input.addEventListener("keypress", (e) => {
-        if (e.key == "Enter") {
-            input.value
-                .split("")
-                .forEach(letter => {
-                    let div = document.createElement("div");
-                    div.innerText = letter;
-                    div.classList.add("letter");
-                    div.draggable = false;
+    mainButton.addEventListener("click", function(e) {
+        input.value
+            .split("")
+            .forEach(function(letter) {
+                let div = document.createElement("div");
+                div.innerText = letter;
+                div.classList.add("letter");
+                div.draggable = false;
 
-                    div.onclick = (e) => {
-                        makeDraggableRed();
-                        div.style.backgroundColor = 'yellow';
+                div.onclick = function(e) {
+                    makeDraggableRed();
+                    div.style.backgroundColor = 'yellow';
 
-                        if (div.style.position != 'absolute') {
-                            div.style.position = 'absolute';
-                        }
+                    if (div.style.position != 'absolute') {
+                        div.style.position = 'absolute';
+                    }
 
-                        coordsArr.push({
-                            x: div.style.left,
-                            y: div.style.top
-                        });
+                    coordsArr.push({
+                        x: div.style.left,
+                        y: div.style.top
+                    });
 
-                        toggleDrag(div);
-                    };
-                    mainDiv.appendChild(div);
-                });
-        }
+                    toggleDrag(div);
+                };
+                mainDiv.appendChild(div);
+            });
     });
 
-    document.onclick = (e) => {
+    document.onclick = function(e) {
         const div = document.elementFromPoint(e.pageX, e.pageY);
 
         if (div === input || div === mainDiv){
@@ -51,7 +50,7 @@
 
     function toggleDrag(div) {
         if (!document.onmousemove) {
-            document.onmousemove = (e) => {
+            document.onmousemove = function(e) {
                 moveAt(e, div);
             }
         } else {
@@ -71,9 +70,13 @@
         const x = rect.top + window.scrollX;
         const y = rect.left + window.scrollY;
 
-        return [...document.querySelectorAll(".letter")]
-            .filter(letter => letter != elem)
-            .find(letter => isCollide(x, y, letter));
+        return [...document.getElementsByClassName("letter")]
+            .filter(function(letter){
+                return letter != elem
+            })
+            .find(function(letter) {
+               return isCollide(x, y, letter)
+            });
     }
 
     function isCollide(x, y, letter) {
@@ -89,10 +92,12 @@
     }
 
     function makeDraggableRed() {
-        [...document.querySelectorAll(".letter")]
-        .forEach(letter => {
+        [...document.getElementsByClassName("letter")]
+        .forEach(function(letter) {
             if (letter.style.backgroundColor != 'red' && letter.style.position == 'absolute')
                 letter.style.backgroundColor = 'red';
         });
     }
-})();
+}
+
+start();
